@@ -11,6 +11,42 @@
 
 let isOpen = false;
 
+/* ── Escala dinámica para móvil ────────────────────── */
+function applyCardScale() {
+  const boxWrapper = document.getElementById('boxWrapper');
+  if (!boxWrapper) return;
+
+  const vw = window.innerWidth;
+
+  // En pantallas muy pequeñas (<= 380px) usamos layout vertical — sin escala
+  if (vw <= 380) {
+    boxWrapper.style.removeProperty('--card-scale');
+    boxWrapper.style.marginBottom = '';
+    return;
+  }
+
+  // Ancho total del card según breakpoint activo
+  const cardWidth = vw <= 480 ? 408   // place(88)+gap(6)+msg(220)+gap(6)+time(88)
+                  : vw <= 580 ? 464   // 104+6+256+6+104
+                  : vw <= 720 ? 568   // 128+6+306+6+128
+                  : 674;              // 150+6+362+6+150
+
+  const scale = vw < cardWidth ? (vw - 24) / cardWidth : 1;
+  boxWrapper.style.setProperty('--card-scale', scale.toFixed(4));
+
+  // Compensar el espacio vacío que deja el scale() para que no empuje el contenido abajo.
+  // Cuando scale < 1, el elemento sigue ocupando su tamaño original en el flujo.
+  // Añadimos un margin-bottom negativo igual a la altura "perdida".
+  if (scale < 1) {
+    const naturalH = boxWrapper.scrollHeight;
+    const scaledH  = naturalH * scale;
+    const lost     = naturalH - scaledH;
+    boxWrapper.style.marginBottom = `-${lost.toFixed(0)}px`;
+  } else {
+    boxWrapper.style.marginBottom = '';
+  }
+}
+
 /* ── Partículas flotantes ──────────────────────────── */
 (function spawnParticles() {
   const wrap = document.getElementById('particles');
@@ -49,10 +85,13 @@ function openCard() {
     capWrapper.style.display  = 'none';
     mainBtn.style.display     = 'none';
 
-    // 3. Añadir .playing → display:flex + TODAS las animaciones @keyframes se activan
+    // 3. Aplicar escala antes de mostrar para evitar flash de contenido cortado
+    applyCardScale();
+
+    // 4. Añadir .playing → display:flex + TODAS las animaciones @keyframes se activan
     boxWrapper.classList.add('playing');
 
-    // 4. Confetti con un poco de delay
+    // 5. Confetti con un poco de delay
     setTimeout(launchConfetti, 750);
   }, 400);
 }
@@ -67,9 +106,12 @@ function closeCard() {
   const mainBtn    = document.getElementById('mainBtn');
 
   // Fade-out del box con inline style
+  const currentScale = parseFloat(
+    getComputedStyle(boxWrapper).getPropertyValue('--card-scale') || '1'
+  ) || 1;
   boxWrapper.style.transition = 'opacity .35s, transform .35s';
   boxWrapper.style.opacity    = '0';
-  boxWrapper.style.transform  = 'scale(0.88)';
+  boxWrapper.style.transform  = `scale(${(currentScale * 0.88).toFixed(4)})`;
 
   setTimeout(() => {
     // Quitar .playing → vuelve a display:none
@@ -78,6 +120,7 @@ function closeCard() {
     boxWrapper.style.transition = '';
     boxWrapper.style.opacity    = '';
     boxWrapper.style.transform  = '';
+    boxWrapper.style.removeProperty('--card-scale');
 
     // Mostrar birrete
     capWrapper.style.display = '';
@@ -141,4 +184,9 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && isOpen) {
     closeCard();
   }
+});
+
+/* ── Recalcular escala al rotar/redimensionar ────────── */
+window.addEventListener('resize', () => {
+  if (isOpen) applyCardScale();
 });
