@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Invitación de Graduación – Diego Ojeda</title>
+  <meta name="description" content="Invitación digital para la ceremonia de graduación de Diego Ojeda."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="scene">
+  <div id="particles" class="particles"></div>
+
+  <!-- ══════════════ ESTADO CERRADO: BIRRETE ══════════════ -->
+  <div class="cap-wrapper" id="capWrapper">
+    <div class="cap" onclick="openCard()" title="Abrir invitación">
+
+      <!-- Borla -->
+      <div class="tassel">
+        <div class="t-knob"></div>
+        <div class="t-cord"></div>
+        <div class="t-fringe">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- Tablero negro rotado 45° -->
+      <div class="board"></div>
+
+      <!-- Sello dorado central -->
+      <div class="seal">&#127891;</div>
+
+      <!-- Toga maroon + V blanco -->
+      <div class="gown">
+        <div class="gown-l"></div>
+        <div class="gown-r"></div>
+        <div class="gown-v"></div>
+      </div>
+
+    </div>
+    <p class="tap-hint">&#10024; Haz clic para abrir la invitaci&oacute;n</p>
+  </div>
+
+  <!-- ══════════════ ESTADO ABIERTO: CAJA EXPLOSIÓN ══════════════ -->
+  <!--
+      .playing activa TODAS las animaciones @keyframes de los hijos.
+      No hay display:none→flex problemático; la clase .playing cambia el display.
+  -->
+  <div class="box-wrapper" id="boxWrapper">
+
+    <!-- FILA 1 · Solo columna central: triángulos + tarjeta -->
+    <div class="top-section">
+      <div class="flap-grid">
+        <div class="flap flap-tl"></div>
+        <div class="flap flap-tr"></div>
+        <div class="flap flap-bl"></div>
+        <div class="flap flap-br"></div>
+      </div>
+
+      <!-- Tarjeta de huésped (aparece en el centro) -->
+      <div class="guest-card">
+        <div class="gc-orn">&#10022;</div>
+        <p class="gc-lbl">To the distinguished presence of:</p>
+        <h2 class="gc-name">Luis Velazquez<span>y su esposa</span></h2>
+        <div class="gc-div">
+          <svg viewBox="0 0 130 18" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0"   y1="9" x2="50"  y2="9" stroke="#c8993e" stroke-width="1"/>
+            <circle cx="65" cy="9" r="4.5" fill="#c8993e"/>
+            <circle cx="2"  cy="9" r="2.2" fill="#c8993e"/>
+            <circle cx="128" cy="9" r="2.2" fill="#c8993e"/>
+            <line x1="80"  y1="9" x2="130" y2="9" stroke="#c8993e" stroke-width="1"/>
+            <circle cx="30" cy="9" r="1.5" fill="#c8993e" opacity=".5"/>
+            <circle cx="100" cy="9" r="1.5" fill="#c8993e" opacity=".5"/>
+          </svg>
+        </div>
+        <p class="gc-from-lbl">From:</p>
+        <p class="gc-from-name">Diego Ojeda</p>
+      </div>
+    </div>
+
+    <!-- FILA 2 · Tres paneles -->
+    <div class="bottom-row">
+
+      <!-- IZQUIERDO: Lugar -->
+      <div class="panel place-panel">
+        <span class="co tl"></span><span class="co tr"></span>
+        <span class="co bl"></span><span class="co br"></span>
+        <div class="panel-body">
+          <div class="side-icon">&#128205;</div>
+          <h3 class="side-title">Place</h3>
+          <p class="side-detail">Jasper County<br>Athletic Field</p>
+        </div>
+      </div>
+
+      <!-- CENTRO: Mensaje -->
+      <div class="panel msg-panel">
+        <!-- Marco decorativo en SVG -->
+        <svg class="msg-frame" viewBox="0 0 360 288" preserveAspectRatio="none">
+          <!-- Borde exterior -->
+          <rect x="7"  y="7"  width="346" height="274" rx="3" fill="none" stroke="#c8993e" stroke-width="1.6"/>
+          <!-- Borde interior sutil -->
+          <rect x="15" y="15" width="330" height="258" rx="2" fill="none" stroke="#c8993e" stroke-width=".55" opacity=".4"/>
+          <!-- Esquina TL -->
+          <path d="M7,36 L7,7 L36,7"    fill="none" stroke="#c8993e" stroke-width="2.8" stroke-linecap="round"/>
+          <circle cx="21.5" cy="21.5" r="2.5" fill="#c8993e"/>
+          <!-- Esquina TR -->
+          <path d="M324,7 L353,7 L353,36"  fill="none" stroke="#c8993e" stroke-width="2.8" stroke-linecap="round"/>
+          <circle cx="338.5" cy="21.5" r="2.5" fill="#c8993e"/>
+          <!-- Esquina BL -->
+          <path d="M7,252 L7,281 L36,281"  fill="none" stroke="#c8993e" stroke-width="2.8" stroke-linecap="round"/>
+          <circle cx="21.5" cy="266.5" r="2.5" fill="#c8993e"/>
+          <!-- Esquina BR -->
+          <path d="M324,281 L353,281 L353,252" fill="none" stroke="#c8993e" stroke-width="2.8" stroke-linecap="round"/>
+          <circle cx="338.5" cy="266.5" r="2.5" fill="#c8993e"/>
+          <!-- Ornamento superior -->
+          <path d="M132,7 Q165,0 180,7 Q195,14 228,7" fill="none" stroke="#c8993e" stroke-width="1"/>
+          <polygon points="180,1.5 183.5,7 176.5,7" fill="#c8993e"/>
+          <!-- Ornamento inferior -->
+          <path d="M132,281 Q165,288 180,281 Q195,274 228,281" fill="none" stroke="#c8993e" stroke-width="1"/>
+          <polygon points="180,286.5 183.5,281 176.5,281" fill="#c8993e"/>
+        </svg>
+
+        <div class="msg-body">
+          <p class="msg-orn">&#10022; &nbsp; &#10087; &nbsp; &#10022;</p>
+          <p class="msg-text">
+            Between the memory of what I was and the promise of what I will become,
+            there exists this instant: a threshold between dreams achieved
+            and those that are still waiting to bloom.
+          </p>
+          <p class="msg-text">
+            I would be deeply honored to have you at my graduation ceremony
+            and to share this momentous occasion together.
+          </p>
+          <p class="msg-orn">&#10022; &nbsp; &#10087; &nbsp; &#10022;</p>
+        </div>
+      </div>
+
+      <!-- DERECHO: Hora -->
+      <div class="panel time-panel">
+        <span class="co tl"></span><span class="co tr"></span>
+        <span class="co bl"></span><span class="co br"></span>
+        <div class="panel-body">
+          <div class="side-icon">&#9200;</div>
+          <h3 class="side-title">Arrival Time</h3>
+          <p class="side-time">07:30 AM<br>&ndash;<br>8:55 AM</p>
+        </div>
+      </div>
+
+    </div><!-- /bottom-row -->
+
+    <button class="close-btn" onclick="closeCard()">&#10005; Cerrar invitaci&oacute;n</button>
+
+  </div><!-- /box-wrapper -->
+
+  <!-- Botón principal -->
+  <button class="main-btn" id="mainBtn" onclick="openCard()">&#10024; Abrir Invitaci&oacute;n</button>
+
+</div><!-- /scene -->
+
+<script src="script.js"></script>
+</body>
+</html>

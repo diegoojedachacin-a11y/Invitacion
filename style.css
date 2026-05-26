@@ -1,0 +1,482 @@
+/* ════════════════════════════════════════════════════
+   RESET & VARIABLES
+   ════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:   #0c0c0c;
+  --maroon:  #6e1624;
+  --maroon2: #9b2030;
+  --cream:   #fffef5;
+  --cream2:  #faf5e8;
+  --gold:    #c8993e;
+  --gold-lt: #e8c878;
+  --gold-dk: #7a5c1e;
+  --red:     #b01010;
+  --ink:     #1e1006;
+}
+
+html, body {
+  min-height: 100vh;
+  font-family: 'Cormorant Garamond', serif;
+  background: #0e0308;
+  overflow-x: hidden;
+}
+
+/* ════════════════════════════════════════════════════
+   ESCENA
+   ════════════════════════════════════════════════════ */
+.scene {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 40px 20px;
+  background: radial-gradient(ellipse at 50% 28%, #280a14 0%, #090205 80%);
+  position: relative;
+}
+
+/* Patrón tenue de líneas doradas */
+.scene::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    135deg, transparent 0px, transparent 78px,
+    rgba(200,153,62,.028) 78px, rgba(200,153,62,.028) 79px);
+  pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════════
+   PARTÍCULAS
+   ════════════════════════════════════════════════════ */
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.p {
+  position: absolute; border-radius: 50%; background: var(--gold-lt);
+  animation: pf var(--d) var(--dl) infinite ease-in; opacity: 0;
+}
+@keyframes pf {
+  0%   { bottom: -4px; opacity: 0; transform: translateX(0); }
+  10%  { opacity: .55; }
+  90%  { opacity: .1; }
+  100% { bottom: 106vh; opacity: 0; transform: translateX(20px); }
+}
+
+/* ════════════════════════════════════════════════════
+   BOTONES
+   ════════════════════════════════════════════════════ */
+.main-btn, .close-btn {
+  font-family: 'Playfair Display', serif;
+  cursor: pointer; border-radius: 40px;
+  border: 1.5px solid var(--gold);
+  transition: transform .2s, box-shadow .2s, background .2s;
+  position: relative; z-index: 10;
+  letter-spacing: .07em;
+}
+.main-btn {
+  background: linear-gradient(135deg, var(--maroon), var(--maroon2));
+  color: var(--gold-lt);
+  padding: 13px 40px; font-size: 1.05rem;
+  box-shadow: 0 4px 22px rgba(0,0,0,.5), 0 0 14px rgba(200,153,62,.18);
+}
+.main-btn:hover  { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 30px rgba(0,0,0,.55), 0 0 22px rgba(200,153,62,.35); }
+.main-btn:active { transform: scale(.97); }
+.close-btn {
+  background: rgba(200,153,62,.1); color: var(--gold-lt);
+  padding: 9px 28px; font-size: .88rem;
+  border-color: rgba(200,153,62,.35); margin-top: 8px;
+}
+.close-btn:hover { background: rgba(200,153,62,.22); }
+
+/* ════════════════════════════════════════════════════
+   ESTADO CERRADO — BIRRETE
+   ════════════════════════════════════════════════════ */
+.cap-wrapper {
+  display: flex; flex-direction: column; align-items: center; gap: 22px;
+  position: relative; z-index: 5;
+  transition: opacity .4s, transform .45s;
+}
+.cap-wrapper.out {
+  opacity: 0; transform: scale(.65) translateY(-16px); pointer-events: none;
+}
+
+.cap {
+  position: relative; width: 282px; height: 274px;
+  cursor: pointer;
+  filter: drop-shadow(0 20px 44px rgba(0,0,0,.72)) drop-shadow(0 5px 12px rgba(0,0,0,.5));
+  transition: transform .3s, filter .3s;
+}
+.cap:hover {
+  transform: translateY(-8px) scale(1.03);
+  filter: drop-shadow(0 28px 52px rgba(0,0,0,.75)) drop-shadow(0 0 20px rgba(200,153,62,.22));
+}
+
+/* Tablero negro (mortarboard) */
+.board {
+  position: absolute;
+  width: 185px; height: 185px;
+  background: linear-gradient(148deg, #222 0%, #0a0a0a 100%);
+  top: 2px; left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  border: 1px solid rgba(200,153,62,.2);
+  box-shadow: 0 4px 22px rgba(0,0,0,.65), inset 0 2px 6px rgba(255,255,255,.05);
+}
+.board::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,255,255,.018) 3px, rgba(255,255,255,.018) 6px);
+}
+
+/* Sello dorado */
+.seal {
+  position: absolute; width: 52px; height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 33%, var(--gold-lt) 0%, #bc7c18 55%, var(--gold-dk) 100%);
+  border: 2px solid var(--gold);
+  top: 50%; left: 50%; transform: translate(-50%, -114%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.65rem;
+  box-shadow: 0 4px 14px rgba(0,0,0,.52), inset 0 1.5px 4px rgba(255,255,255,.28);
+  z-index: 3;
+}
+
+/* Toga */
+.gown {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 234px; height: 138px; overflow: hidden;
+}
+.gown-l {
+  position: absolute; bottom: 0; left: 0;
+  border-left: 117px solid transparent;
+  border-bottom: 138px solid var(--maroon2);
+}
+.gown-r {
+  position: absolute; bottom: 0; right: 0;
+  border-right: 117px solid transparent;
+  border-bottom: 138px solid var(--maroon2);
+}
+.gown-v {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  border-left: 49px solid transparent;
+  border-right: 49px solid transparent;
+  border-bottom: 102px solid var(--cream2);
+}
+.gown::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.12) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* Borla */
+.tassel { position: absolute; top: 5px; right: 20px; z-index: 4; }
+.t-knob {
+  width: 16px; height: 16px; border-radius: 50%; margin: 0 auto 3px;
+  background: radial-gradient(circle at 37% 33%, var(--gold-lt), var(--gold-dk));
+  border: 1.5px solid var(--gold);
+  box-shadow: 0 2px 8px rgba(0,0,0,.6);
+}
+.t-cord {
+  width: 3px; height: 30px; margin: 0 auto;
+  background: linear-gradient(to bottom, var(--gold), var(--gold-dk));
+  border-radius: 2px;
+}
+.t-fringe { display: flex; gap: 2px; padding-top: 3px; justify-content: center; }
+.t-fringe span {
+  display: block; width: 2px; height: 36px;
+  background: linear-gradient(to bottom, var(--gold-dk) 0%, var(--maroon2) 100%);
+  border-radius: 1px;
+}
+
+/* Texto de pista */
+.tap-hint {
+  font-family: 'Playfair Display', serif; font-size: 1rem;
+  color: var(--gold-lt); letter-spacing: .06em;
+  animation: hint-pulse 2.6s ease-in-out infinite;
+}
+@keyframes hint-pulse {
+  0%,100% { opacity: .6; transform: translateY(0); }
+  50%      { opacity: 1;  transform: translateY(-5px); }
+}
+
+/* ════════════════════════════════════════════════════
+   ESTADO ABIERTO — CAJA EXPLOSIÓN
+   ════════════════════════════════════════════════════
+
+   TÉCNICA CLAVE: Usamos @keyframes (no transitions).
+   Las animaciones @keyframes sí funcionan cuando
+   el padre cambia de display:none → display:flex.
+   La clase .playing activa TODAS las animaciones
+   a través del selector padre.
+   ════════════════════════════════════════════════════ */
+.box-wrapper {
+  display: none;             /* .playing lo cambia a flex */
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative; z-index: 5;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+}
+.box-wrapper.playing { display: flex; }
+
+/* ── Fila 1: Sección superior ── */
+.top-section {
+  width: 362px; height: 268px;
+  position: relative; overflow: hidden;
+  border-radius: 3px;
+  box-shadow: 0 10px 42px rgba(0,0,0,.75);
+  /* Estado inicial antes de la animación */
+  opacity: 0;
+  transform: rotateX(-80deg) translateY(-18px);
+}
+/* Animación de apertura de la sección superior */
+.box-wrapper.playing .top-section {
+  animation: top-fold .72s .05s both cubic-bezier(.22,1.2,.44,1);
+}
+@keyframes top-fold {
+  from { opacity: .1; transform: rotateX(-80deg) translateY(-18px); }
+  to   { opacity: 1;  transform: rotateX(0deg)   translateY(0); }
+}
+
+/* Cuadrícula de solapas triangulares */
+.flap-grid {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.flap { position: relative; overflow: hidden; }
+.flap::before, .flap::after { content: ''; position: absolute; inset: 0; }
+
+/* Colores de triángulos en cada cuadrante */
+.flap-tl::before { background: var(--maroon2); clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.flap-tl::after  { background: var(--black);   clip-path: polygon(0 0,   100% 0,   0 100%); }
+.flap-tr::before { background: var(--black);   clip-path: polygon(0 0,   100% 0,   0 100%); }
+.flap-tr::after  { background: var(--maroon2); clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.flap-bl::before { background: var(--black);   clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.flap-bl::after  { background: var(--maroon2); clip-path: polygon(0 0, 0 100%,   100% 100%); }
+.flap-br::before { background: var(--maroon2); clip-path: polygon(0 0, 100% 100%, 0 100%); }
+.flap-br::after  { background: var(--black);   clip-path: polygon(0 0, 100% 0,   100% 100%); }
+
+/*
+  Estado inicial de las solapas: todas en el centro (superpuestas).
+  translate(100%,100%) mueve la solapa TL hacia la esquina BR del grid
+  = centro del área total. Efecto "pétalos cerrados".
+*/
+.flap-tl { transform: translate( 100%,  100%); }
+.flap-tr { transform: translate(-100%,  100%); }
+.flap-bl { transform: translate( 100%, -100%); }
+.flap-br { transform: translate(-100%, -100%); }
+
+/* Animaciones: cada solapa vuela a su esquina */
+.box-wrapper.playing .flap-tl { animation: open-tl .65s .1s  both cubic-bezier(.22,1.3,.44,1); }
+.box-wrapper.playing .flap-tr { animation: open-tr .65s .18s both cubic-bezier(.22,1.3,.44,1); }
+.box-wrapper.playing .flap-bl { animation: open-bl .65s .18s both cubic-bezier(.22,1.3,.44,1); }
+.box-wrapper.playing .flap-br { animation: open-br .65s .26s both cubic-bezier(.22,1.3,.44,1); }
+
+@keyframes open-tl { from { transform: translate( 100%,  100%); } to { transform: translate(0,0); } }
+@keyframes open-tr { from { transform: translate(-100%,  100%); } to { transform: translate(0,0); } }
+@keyframes open-bl { from { transform: translate( 100%, -100%); } to { transform: translate(0,0); } }
+@keyframes open-br { from { transform: translate(-100%, -100%); } to { transform: translate(0,0); } }
+
+/* ── Tarjeta de huésped (centro del top-section) ── */
+.guest-card {
+  position: absolute; top: 50%; left: 50%;
+  width: 180px; height: 180px;
+  background: var(--cream);
+  border: 1.5px solid rgba(200,153,62,.5);
+  border-radius: 3px;
+  box-shadow: 0 4px 22px rgba(0,0,0,.6), 0 0 0 1px rgba(200,153,62,.1);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 12px 10px; text-align: center;
+  z-index: 5;
+  /* Estado inicial: invisible + pequeña */
+  opacity: 0;
+  transform: translate(-50%,-50%) scale(.3);
+}
+.box-wrapper.playing .guest-card {
+  animation: card-pop .6s .42s both cubic-bezier(.18,1.5,.44,1);
+}
+@keyframes card-pop {
+  from { opacity: 0; transform: translate(-50%,-50%) scale(.3); }
+  to   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+}
+
+/* Tipografía tarjeta */
+.gc-orn       { font-size: 1.1rem; color: var(--gold); margin-bottom: 4px; line-height: 1; }
+.gc-lbl       { font-style: italic; font-size: .67rem; color: var(--ink); letter-spacing: .025em; margin-bottom: 3px; }
+.gc-name      { font-family: 'Great Vibes', cursive; font-size: 1.2rem; font-weight: 400; color: var(--red); line-height: 1.25; margin-bottom: 2px; }
+.gc-name span { display: block; font-size: .98rem; }
+.gc-div       { margin: 3px 0 5px; }
+.gc-div svg   { display: block; width: 125px; height: 18px; margin: 0 auto; }
+.gc-from-lbl  { font-style: italic; font-size: .64rem; color: var(--ink); margin-bottom: 1px; }
+.gc-from-name { font-family: 'Great Vibes', cursive; font-size: .94rem; color: var(--red); }
+
+/* ── Fila 2: tres paneles ── */
+.bottom-row {
+  display: flex; gap: 6px; align-items: stretch;
+  perspective: 820px;
+}
+
+/* Panel base */
+.panel {
+  background: var(--cream);
+  border-radius: 4px;
+  box-shadow: 0 8px 34px rgba(0,0,0,.65);
+  min-height: 288px;
+  position: relative;
+  overflow: visible; /* permite que los corner ornaments sean visibles */
+}
+
+/* Panel izquierdo */
+.place-panel {
+  width: 150px;
+  opacity: 0; transform: rotateY(-88deg);
+}
+.box-wrapper.playing .place-panel {
+  animation: in-left .6s .5s both cubic-bezier(.22,1.2,.44,1);
+}
+@keyframes in-left {
+  from { opacity: .2; transform: rotateY(-88deg); }
+  to   { opacity: 1;  transform: rotateY(0deg); }
+}
+
+/* Panel mensaje */
+.msg-panel {
+  width: 362px;
+  opacity: 0; transform: translateY(28px) scale(.93);
+}
+.box-wrapper.playing .msg-panel {
+  animation: in-center .6s .44s both cubic-bezier(.22,1.2,.44,1);
+}
+@keyframes in-center {
+  from { opacity: 0; transform: translateY(28px) scale(.93); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Panel derecho */
+.time-panel {
+  width: 150px;
+  opacity: 0; transform: rotateY(88deg);
+}
+.box-wrapper.playing .time-panel {
+  animation: in-right .6s .55s both cubic-bezier(.22,1.2,.44,1);
+}
+@keyframes in-right {
+  from { opacity: .2; transform: rotateY(88deg); }
+  to   { opacity: 1;  transform: rotateY(0deg); }
+}
+
+/* ── Ornamentos de esquina (paneles laterales) ── */
+.co {
+  position: absolute; width: 24px; height: 24px; z-index: 2;
+  border: 0 solid var(--gold); opacity: .72;
+}
+.co.tl { top: 8px;    left: 8px;    border-top-width: 2.2px; border-left-width: 2.2px; }
+.co.tr { top: 8px;    right: 8px;   border-top-width: 2.2px; border-right-width: 2.2px; }
+.co.bl { bottom: 8px; left: 8px;    border-bottom-width: 2.2px; border-left-width: 2.2px; }
+.co.br { bottom: 8px; right: 8px;   border-bottom-width: 2.2px; border-right-width: 2.2px; }
+.co::after {
+  content: ''; position: absolute;
+  width: 5px; height: 5px;
+  background: var(--gold); border-radius: 50%;
+}
+.co.tl::after { top: -1.5px; left: -1.5px; }
+.co.tr::after { top: -1.5px; right: -1.5px; }
+.co.bl::after { bottom: -1.5px; left: -1.5px; }
+.co.br::after { bottom: -1.5px; right: -1.5px; }
+
+/* ── Cuerpo de paneles laterales ── */
+.panel-body {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: 100%; min-height: 288px;
+  padding: 32px 14px; text-align: center; gap: 11px;
+}
+.side-icon   { font-size: 2.2rem; line-height: 1; }
+.side-title  {
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  font-size: .76rem; letter-spacing: .15em; text-transform: uppercase; color: var(--ink);
+}
+.side-detail {
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700;
+  font-size: .83rem; color: var(--ink); line-height: 1.55;
+}
+.side-time {
+  font-family: 'Playfair Display', serif; font-weight: 700; font-style: italic;
+  font-size: .98rem; color: var(--red); line-height: 1.7;
+}
+
+/* ── Panel mensaje: frame SVG + contenido ── */
+.msg-frame {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 1;
+}
+.msg-body {
+  position: relative; z-index: 2;
+  padding: 30px 40px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 288px; gap: 10px; text-align: center;
+}
+.msg-orn  { font-size: .82rem; color: var(--gold); letter-spacing: .3em; flex-shrink: 0; }
+.msg-text {
+  font-family: 'Great Vibes', cursive; font-size: 1.01rem;
+  color: var(--ink); line-height: 1.8;
+}
+.msg-text + .msg-text { margin-top: 4px; }
+
+/* ════════════════════════════════════════════════════
+   CONFETTI
+   ════════════════════════════════════════════════════ */
+.confetti-wrap {
+  position: fixed; inset: 0; pointer-events: none; z-index: 999; overflow: hidden;
+}
+.cf {
+  position: absolute;
+  transition: transform 1.35s cubic-bezier(.1,.58,.18,1), opacity 1.1s .1s ease;
+}
+
+/* ════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+  .top-section        { width: 306px; height: 228px; }
+  .guest-card         { width: 152px; height: 152px; }
+  .gc-name            { font-size: 1.04rem; }
+  .gc-name span       { font-size: .86rem; }
+  .msg-panel          { width: 306px; }
+  .place-panel,
+  .time-panel         { width: 128px; }
+  .msg-body           { padding: 22px 26px; }
+  .msg-text           { font-size: .9rem; }
+}
+
+@media (max-width: 580px) {
+  .top-section        { width: 256px; height: 190px; }
+  .guest-card         { width: 126px; height: 126px; }
+  .gc-orn             { font-size: .9rem; }
+  .gc-lbl             { font-size: .58rem; }
+  .gc-name            { font-size: .9rem; }
+  .gc-name span       { font-size: .74rem; }
+  .gc-from-name       { font-size: .8rem; }
+  .msg-panel          { width: 256px; }
+  .place-panel,
+  .time-panel         { width: 104px; }
+  .msg-body           { padding: 18px 18px; }
+  .msg-text           { font-size: .8rem; }
+  .side-icon          { font-size: 1.8rem; }
+  .side-title         { font-size: .68rem; }
+  .side-detail,
+  .side-time          { font-size: .76rem; }
+  .cap                { width: 240px; height: 232px; }
+  .board              { width: 158px; height: 158px; }
+  .gown               { width: 200px; height: 118px; }
+  .gown-l             { border-left-width: 100px; border-bottom-width: 118px; }
+  .gown-r             { border-right-width: 100px; border-bottom-width: 118px; }
+  .gown-v             { border-left-width: 42px; border-right-width: 42px; border-bottom-width: 88px; }
+}
